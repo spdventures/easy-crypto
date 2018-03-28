@@ -1,0 +1,25 @@
+{
+  "name": "easy-crypto",
+  "version": "1.0.0",
+  "description": "Easy crypto helpers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/spdventures/easy-crypto.git"
+  },
+  "keywords": [
+    "crypto"
+  ],
+  "author": "Manan Mehta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spdventures/easy-crypto/issues"
+  },
+  "homepage": "https://github.com/spdventures/easy-crypto#readme",
+  "dependencies": {
+    "node-rsa": "^0.4.2"
+  }
+}
