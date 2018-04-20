@@ -58,7 +58,7 @@ function generatePubKey(privKey, scheme) {
 
 function isKeyPairValid(privKey, pubKey) {
   let keys = generatePubKey(privKey);
-  return keys && keys.pubKey === pubKey
+  return keys ? keys.pubKey === pubkey : false
 }
 
 module.exports = {
@@ -69,3 +69,4 @@ module.exports = {
   checkHashValidity,
   isKeyPairValid
 };
+
