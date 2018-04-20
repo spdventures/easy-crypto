@@ -46,7 +46,8 @@ function checkHashValidity(buf, hash) {
   return prev_hash === hash_;
 }
 
-function generatePubKey(privKey) {
+function generatePubKey(privKey, scheme) {
+  let es = scheme ? scheme : constants.encryptionScheme;
   try {
     let key = NodeRSA(privKey);
     return { pubKey: key.exportKey(`${es}-public-pem`), privKey: key.exportKey(`${es}-pem`) }
