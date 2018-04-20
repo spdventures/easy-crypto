@@ -9,5 +9,7 @@ declare module "easy-crypto" {
                     alg?: string): string;
   function isKeyPairValid(privKey: string,
                           pubKey: string): boolean
-  export {generateHash, signCert, isKeyPairValid};
+  function generateKeyPair(scheme?: string): {pubKey: string, privKey: string}
+  export {generateHash, signCert, isKeyPairValid, generateKeyPair};
 }
+
