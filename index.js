@@ -57,8 +57,12 @@ function generatePubKey(privKey, scheme) {
 }
 
 function isKeyPairValid(privKey, pubKey) {
-  let keys = generatePubKey(privKey);
-  return keys ? keys.pubKey === pubKey : false
+  try {
+    const sig = signCert(privKey,'SPENCERSUCKS');
+    return verifyCert(pubKey, 'SPENCERSUCKS', sig);
+  } catch (err) {
+    return false
+  }
 }
 
 module.exports = {
@@ -67,7 +71,9 @@ module.exports = {
   generateKeyPair,
   generateHash,
   checkHashValidity,
-  isKeyPairValid
+  isKeyPairValid,
+  generatePubKey
 };
+
 
 
