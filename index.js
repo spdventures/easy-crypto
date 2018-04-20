@@ -46,10 +46,25 @@ function checkHashValidity(buf, hash) {
   return prev_hash === hash_;
 }
 
+function generatePubKey(privKey) {
+  try {
+    let key = NodeRSA(privKey);
+    return { pubKey: key.exportKey(`${es}-public-pem`), privKey: key.exportKey(`${es}-pem`) }
+  } catch (err) {
+    return null
+  }
+}
+
+function isKeyPairValid(privKey, pubKey) {
+  let keys = generatePubKey(privKey);
+  return keys && keys.pubKey === pubKey
+}
+
 module.exports = {
   signCert,
   verifyCert,
   generateKeyPair,
   generateHash,
-  checkHashValidity
+  checkHashValidity,
+  isKeyPairValid
 };
