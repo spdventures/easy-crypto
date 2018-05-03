@@ -58,8 +58,8 @@ function generatePubKey(privKey, scheme) {
 
 function isKeyPairValid(privKey, pubKey) {
   try {
-    const sig = signCert(privKey,'SPENCERSUCKS');
-    return verifyCert(pubKey, 'SPENCERSUCKS', sig);
+    const sig = signCert(privKey,'FOOBARFOO');
+    return verifyCert(pubKey, 'FOOBARFOO', sig);
   } catch (err) {
     return false
   }
