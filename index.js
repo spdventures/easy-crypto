@@ -1,5 +1,7 @@
 let crypto = require('crypto')
-  , NodeRSA = require('node-rsa');
+  , NodeRSA = require('node-rsa')
+  , aes = require('aes-js')
+  , crypto2 = require('crypto2');
 
 let constants = require('./constants');
 
@@ -65,6 +67,45 @@ function isKeyPairValid(privKey, pubKey) {
   }
 }
 
+// Returns promise. Call by createEncryptedPrivkey(...).then( response => console.log(response))
+// returns { privkeyEncrypted: string, iv: string }
+async function createEncryptedPrivkey(password, privKeyPlaintext) {
+
+    const iv = await crypto2.createIv();
+
+    const pass = await getPasswordLen32(password);
+
+    const privkeyEncrypted = await crypto2.encrypt(privKeyPlaintext, pass, iv);
+
+    return {
+        privkeyEncrypted,
+        iv
+    }
+}
+
+// Returns promise. Call like this: decryptEncryptedPrivkey(...).then( response => console.log(response))
+async function decryptEncryptedPrivkey(encryptedPrivKey, password, iv) {
+
+    const pass = await getPasswordLen32(password);
+
+    return crypto2.decrypt(encryptedPrivKey, pass, iv);
+}
+
+async function getPasswordLen32 (password) {
+
+    const passwordHash = await crypto2.hash(password);
+
+    let passLen32 = '';
+
+    // Password must be of length 32
+    for (let i = 0; i < 32; i++) {
+        passLen32 += passwordHash[i];
+    }
+
+    return passLen32;
+}
+
+
 module.exports = {
   signCert,
   verifyCert,
@@ -72,7 +113,9 @@ module.exports = {
   generateHash,
   checkHashValidity,
   isKeyPairValid,
-  generatePubKey
+  generatePubKey,
+  createEncryptedPrivkey,
+  decryptEncryptedPrivkey,
 };
 
 
