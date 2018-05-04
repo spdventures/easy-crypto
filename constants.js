@@ -7,6 +7,6 @@ module.exports = {
   signatureHashAlg: 'RSA-SHA256',
   encryptionScheme: 'pkcs8',
   aes: 'aes128',
-  utf8: 'utf8',
+  encoding: 'utf8',
   hex: 'hex',
 };

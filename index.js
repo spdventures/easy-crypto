@@ -69,7 +69,7 @@ function createEncryptedPrivkey(password, privkeyPlaintext) {
 
     const cipher = crypto.createCipher(constants.aes, password);
 
-    let encrypted = cipher.update(privkeyPlaintext, constants.utf8, constants.hex);
+    let encrypted = cipher.update(privkeyPlaintext, constants.encoding, constants.hex);
     encrypted += cipher.final(constants.hex);
 
     return encrypted;
@@ -79,8 +79,8 @@ function decryptEncryptedPrivkey(password, encryptedPrivkey) {
 
     const decipher = crypto.createDecipher(constants.aes, password);
 
-    let decrypted = decipher.update(encryptedPrivkey, constants.hex, constants.utf8);
-    decrypted += decipher.final(constants.utf8);
+    let decrypted = decipher.update(encryptedPrivkey, constants.hex, constants.encoding);
+    decrypted += decipher.final(constants.encoding);
 
     return decrypted
 }
