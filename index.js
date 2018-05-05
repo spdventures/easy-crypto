@@ -67,23 +67,60 @@ function isKeyPairValid(privKey, pubKey) {
 
 function createEncryptedPrivkey(password, privkeyPlaintext) {
 
-    const cipher = crypto.createCipher(constants.aes, password);
+    const iv = makeIV();
 
-    let encrypted = cipher.update(privkeyPlaintext, constants.encoding, constants.hex);
-    encrypted += cipher.final(constants.hex);
+    const passwordHashed = passwordLength16(password)
 
-    return encrypted;
+    const cipher = crypto.createCipheriv(constants.algorithm, passwordHashed, iv);
+
+    let privkeyEncrypted = cipher.update(privkeyPlaintext, constants.inputEncoding, constants.outputEncoding);
+    privkeyEncrypted += cipher.final(constants.outputEncoding);
+
+    return {
+        privkeyEncrypted,
+        iv
+    };
 }
 
-function decryptEncryptedPrivkey(password, encryptedPrivkey) {
+function decryptEncryptedPrivkey(password, privkeyEncrypted, iv) {
 
-    const decipher = crypto.createDecipher(constants.aes, password);
+    const passwordHashed = passwordLength16(password);
 
-    let decrypted = decipher.update(encryptedPrivkey, constants.hex, constants.encoding);
+    const decipher = crypto.createDecipheriv(constants.algorithm, passwordHashed, iv);
+
+    let decrypted = decipher.update(privkeyEncrypted, constants.outputEncoding, constants.inputEncoding);
     decrypted += decipher.final(constants.encoding);
 
     return decrypted
 }
+
+function makeIV() {
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (let i = 0; i < 16; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+function passwordLength16(password) {
+
+    const hash = crypto.createHash(constants.hmacDigestAlg);
+
+    hash.update(password);
+
+    const hashedPassword = hash.digest(constants.outputEncoding);
+
+    let password16Length = '';
+
+    for (let i=0; i<16; i++) {
+        password16Length += hashedPassword[i];
+    }
+
+    return password16Length
+}
+
 
 module.exports = {
   signCert,

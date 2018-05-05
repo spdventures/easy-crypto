@@ -6,7 +6,7 @@ module.exports = {
   hmacSize: 32,
   signatureHashAlg: 'RSA-SHA256',
   encryptionScheme: 'pkcs8',
-  aes: 'aes128',
-  encoding: 'utf8',
-  hex: 'hex',
+  algorithm: 'aes128',
+  inputEncoding: 'utf8',
+  outputEncoding: 'hex',
 };
