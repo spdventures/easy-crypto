@@ -116,7 +116,7 @@ function bufferToHexStr(uint8Array) {
 }
 
 function hexStrToBuffer(hexStr) {
-    return new Buffer(hexStr, "hex");
+    return new Buffer.from(hexStr, "hex")
 }
 
 
