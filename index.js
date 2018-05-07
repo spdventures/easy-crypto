@@ -65,6 +65,51 @@ function isKeyPairValid(privKey, pubKey) {
   }
 }
 
+function createEncryptedPrivkey(password, privkeyPlaintext) {
+
+    const iv = makeIV();
+
+    const passwordHashed = passwordLength16(password)
+
+    const cipher = crypto.createCipheriv(constants.algorithm, passwordHashed, iv);
+
+    let privkeyEncrypted = cipher.update(privkeyPlaintext, constants.inputEncoding, constants.outputEncoding);
+    privkeyEncrypted += cipher.final(constants.outputEncoding);
+
+    return {
+        privkeyEncrypted,
+        iv
+    };
+}
+
+function decryptEncryptedPrivkey(password, privkeyEncrypted, iv) {
+
+    const passwordHashed = passwordLength16(password);
+
+    const decipher = crypto.createDecipheriv(constants.algorithm, passwordHashed, iv);
+
+    let decrypted = decipher.update(privkeyEncrypted, constants.outputEncoding, constants.inputEncoding);
+    decrypted += decipher.final(constants.encoding);
+
+    return decrypted
+}
+
+function makeIV() {
+    return crypto.randomBytes(16);
+}
+
+function passwordLength16(password) {
+
+    const hash = crypto.createHash(constants.hmacDigestAlg);
+
+    hash.update(password);
+
+    const hashedPassword = hash.digest(constants.outputEncoding);
+
+    return hashedPassword.slice(0,16);
+}
+
+
 module.exports = {
   signCert,
   verifyCert,
@@ -72,7 +117,9 @@ module.exports = {
   generateHash,
   checkHashValidity,
   isKeyPairValid,
-  generatePubKey
+  generatePubKey,
+  createEncryptedPrivkey,
+  decryptEncryptedPrivkey,
 };
 
 
