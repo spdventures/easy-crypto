@@ -78,15 +78,17 @@ function createEncryptedPrivkey(password, privkeyPlaintext) {
 
     return {
         privkeyEncrypted,
-        iv
+        iv: bufferToHexStr(iv)
     };
 }
 
 function decryptEncryptedPrivkey(password, privkeyEncrypted, iv) {
 
+    const ivUint8 = hexStrToBuffer(iv);
+
     const passwordHashed = passwordLength16(password);
 
-    const decipher = crypto.createDecipheriv(constants.algorithm, passwordHashed, iv);
+    const decipher = crypto.createDecipheriv(constants.algorithm, passwordHashed, ivUint8);
 
     let decrypted = decipher.update(privkeyEncrypted, constants.outputEncoding, constants.inputEncoding);
     decrypted += decipher.final(constants.encoding);
@@ -107,6 +109,14 @@ function passwordLength16(password) {
     const hashedPassword = hash.digest(constants.outputEncoding);
 
     return hashedPassword.slice(0,16);
+}
+
+function bufferToHexStr(uint8Array) {
+    return Buffer.from(uint8Array).toString('hex');
+}
+
+function hexStrToBuffer(hexStr) {
+    return new Buffer(hexStr, "hex");
 }
 
 
