@@ -95,13 +95,7 @@ function decryptEncryptedPrivkey(password, privkeyEncrypted, iv) {
 }
 
 function makeIV() {
-    let text = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (let i = 0; i < 16; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
+    return crypto.randomBytes(16);
 }
 
 function passwordLength16(password) {
@@ -112,13 +106,7 @@ function passwordLength16(password) {
 
     const hashedPassword = hash.digest(constants.outputEncoding);
 
-    let password16Length = '';
-
-    for (let i=0; i<16; i++) {
-        password16Length += hashedPassword[i];
-    }
-
-    return password16Length
+    return hashedPassword.slice(0,16);
 }
 
 

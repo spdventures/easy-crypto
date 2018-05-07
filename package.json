@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/spdventures/easy-crypto#readme",
   "dependencies": {
-    "crypto2": "^2.0.0",
     "node-rsa": "^0.4.2"
   }
 }
