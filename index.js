@@ -124,6 +124,3 @@ module.exports = {
   encryptPrivkey,
   decryptPrivkey,
 };
-
-
-
