@@ -1,6 +1,6 @@
 {
   "name": "easy-crypto",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Easy crypto helpers",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/spdventures/easy-crypto#readme",
   "dependencies": {
-    "crypto2": "^2.0.0",
     "node-rsa": "^0.4.2"
   }
 }

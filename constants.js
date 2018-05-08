@@ -5,5 +5,8 @@ module.exports = {
   hmacDigestAlg: 'sha256',
   hmacSize: 32,
   signatureHashAlg: 'RSA-SHA256',
-  encryptionScheme: 'pkcs8'
+  encryptionScheme: 'pkcs8',
+  algorithm: 'aes128',
+  inputEncoding: 'utf8',
+  outputEncoding: 'hex',
 };

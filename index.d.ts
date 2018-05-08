@@ -10,10 +10,10 @@ declare module "easy-crypto" {
   function isKeyPairValid(privKey: string,
                           pubKey: string): boolean
   function generateKeyPair(scheme?: string): {pubKey: string, privKey: string}
-  function createEncryptedPrivkey(password: string,
+  function encryptPrivkey(password: string,
                            privateKeyPlaintext: string): {privkeyEncrypted: string, iv: string}
-  function decryptEncryptedPrivkey(encryptedPrivkey: string, password: string, iv: string): string
+  function decryptPrivkey(password: string, encryptedPrivkey: string, iv: string): string
 
-  export {generateHash, signCert, isKeyPairValid, generateKeyPair, createEncryptedPrivkey, decryptEncryptedPrivkey};
+  export {generateHash, signCert, isKeyPairValid, generateKeyPair, encryptPrivkey, decryptPrivkey};
 }
 
