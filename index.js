@@ -27,7 +27,7 @@ function generateKeyPair(scheme) {
 
 function generateHash(buf, saltSize, hashIterations, hmacSize, hmacDigestAlg) {
   let saltSize_ = saltSize ? saltSize : constants.saltSize;
-  let salt = crypto.randomBytes(saltSize_).toString('hex');
+  let salt = getRandomBytes(saltSize_).toString('hex');
   let iterations = hashIterations ? hashIterations : constants.hashIterations;
   let keyLen = hmacSize ? hmacSize : constants.hmacSize;
   let digest = hmacDigestAlg ? hmacDigestAlg : constants.hmacDigestAlg;
@@ -65,49 +65,42 @@ function isKeyPairValid(privKey, pubKey) {
   }
 }
 
-function createEncryptedPrivkey(password, privkeyPlaintext) {
-
-    const iv = makeIV();
-
-    const passwordHashed = passwordLength16(password)
-
-    const cipher = crypto.createCipheriv(constants.algorithm, passwordHashed, iv);
-
-    let privkeyEncrypted = cipher.update(privkeyPlaintext, constants.inputEncoding, constants.outputEncoding);
-    privkeyEncrypted += cipher.final(constants.outputEncoding);
-
+function encryptPrivkey(password, privkeyPlaintext, alg, inputEnco, outputEnco) {
+    let algorithm = alg ? alg : constants.algorithm;
+    let inputEncoding = inputEnco ? inputEnco : constants.inputEncoding;
+    let outputEncoding = outputEnco ? outputEnco : constants.outputEncoding;
+    const iv = getRandomBytes(16);
+    const passwordHashed = passwordLength16(password);
+    const cipher = crypto.createCipheriv(algorithm, passwordHashed, iv);
+    let privkeyEncrypted = cipher.update(privkeyPlaintext, inputEncoding, outputEncoding);
+    privkeyEncrypted += cipher.final(outputEncoding);
     return {
         privkeyEncrypted,
         iv: bufferToHexStr(iv)
     };
 }
 
-function decryptEncryptedPrivkey(password, privkeyEncrypted, iv) {
-
+function decryptPrivkey(password, privkeyEncrypted, iv, alg, inputEnc, outputEnc) {
+    let algorithm = alg ? alg : constants.algorithm;
+    let inputEncoding = inputEnc ? inputEnc : constants.inputEncoding;
+    let outputEncoding = outputEnc ? outputEnc : constants.outputEncoding;
     const ivUint8 = hexStrToBuffer(iv);
-
     const passwordHashed = passwordLength16(password);
-
-    const decipher = crypto.createDecipheriv(constants.algorithm, passwordHashed, ivUint8);
-
-    let decrypted = decipher.update(privkeyEncrypted, constants.outputEncoding, constants.inputEncoding);
-    decrypted += decipher.final(constants.encoding);
-
+    const decipher = crypto.createDecipheriv(algorithm, passwordHashed, ivUint8);
+    let decrypted = decipher.update(privkeyEncrypted, outputEncoding, inputEncoding);
     return decrypted
 }
 
-function makeIV() {
-    return crypto.randomBytes(16);
+function getRandomBytes(numBytes) {
+    return crypto.randomBytes(numBytes);
 }
 
-function passwordLength16(password) {
-
-    const hash = crypto.createHash(constants.hmacDigestAlg);
-
+function passwordLength16(password, alg, outputEncoding) {
+    let algorithm = alg ? alg : constants.hmacDigestAlg;
+    let encoding = outputEncoding ? outputEncoding : constants.outputEncoding;
+    const hash = crypto.createHash(algorithm);
     hash.update(password);
-
-    const hashedPassword = hash.digest(constants.outputEncoding);
-
+    const hashedPassword = hash.digest(encoding);
     return hashedPassword.slice(0,16);
 }
 
@@ -128,9 +121,6 @@ module.exports = {
   checkHashValidity,
   isKeyPairValid,
   generatePubKey,
-  createEncryptedPrivkey,
-  decryptEncryptedPrivkey,
+  encryptPrivkey,
+  decryptPrivkey,
 };
-
-
-
